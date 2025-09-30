@@ -1,0 +1,25 @@
+{
+  "name": "music-lyrics-app",
+  "version": "1.0.0",
+  "description": "Final Project - Music & Lyrics App",
+  "main": "vite.config.js",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AISpectra/music-lyrics-app.git"
+  },
+  "keywords": [],
+  "author": "Samuel Expósito Ruiz",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/AISpectra/music-lyrics-app/issues"
+  },
+  "homepage": "https://github.com/AISpectra/music-lyrics-app#readme",
+  "devDependencies": {
+    "vite": "^5.0.0"
+  }
+}
