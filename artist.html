@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Artist · Music & Lyrics Finder</title>
+  <link rel="stylesheet" href="/css/style.css" />
+</head>
+<body>
+  <header id="site-header"></header>
+
+  <main class="container">
+    <section id="artist-header" class="artist-header"></section>
+
+    <section>
+      <h2>Top Tracks</h2>
+      <div id="artist-tracks" class="list"></div>
+      <p id="tracks-empty" class="muted" hidden>No top tracks found.</p>
+    </section>
+
+    <section>
+      <h2>Albums</h2>
+      <div id="artist-albums" class="grid"></div>
+      <p id="albums-empty" class="muted" hidden>No albums found.</p>
+    </section>
+  </main>
+
+  <footer id="site-footer"></footer>
+
+  <script type="module" src="/js/artist.js"></script>
+</body>
+</html>

@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Music & Lyrics Finder</title>
+  <link rel="stylesheet" href="/css/style.css" />
+</head>
+<body>
+  <header id="site-header"></header>
+
+  <main class="container">
+    <section class="hero">
+      <h1>Music & Lyrics Finder</h1>
+      <p>Search songs, read lyrics, and explore artists.</p>
+      <form id="search-form" class="search">
+        <input name="q" id="q" placeholder="Search songs or artists..." required />
+        <button type="submit">Search</button>
+      </form>
+    </section>
+
+    <section>
+      <h2>Try these</h2>
+      <div class="chips">
+        <button class="chip" data-query="coldplay">Coldplay</button>
+        <button class="chip" data-query="adele">Adele</button>
+        <button class="chip" data-query="believer">Believer</button>
+        <button class="chip" data-query="bad guy">Bad Guy</button>
+      </div>
+    </section>
+  </main>
+
+  <footer id="site-footer"></footer>
+
+  <script type="module" src="/js/main.js"></script>
+</body>
+</html>
