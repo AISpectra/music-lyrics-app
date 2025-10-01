@@ -1,4 +1,4 @@
-import{l as d,g as u,q as e}from"./utils-DoH-JBCW.js";import{A as p}from"./api-L64ZJ4vM.js";const n=new p;function h(t){return`
+import{l as d,g as u,q as e}from"./utils-DoH-JBCW.js";import{A as p}from"./api-CAVFttsR.js";const n=new p;function h(t){return`
     <img src="${t.strArtistThumb||t.strArtistFanart||""}" alt="${t.strArtist}" onerror="this.style.display='none'"/>
     <div class="meta">
       <h1 style="margin:0 0 6px">${t.strArtist}</h1>

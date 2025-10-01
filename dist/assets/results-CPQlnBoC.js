@@ -1,4 +1,4 @@
-import{l as d,g as m,q as c,a as l,f as h}from"./utils-DoH-JBCW.js";import{A as u}from"./api-L64ZJ4vM.js";const o=new u;function p(t){return`
+import{l as d,g as m,q as c,a as l,f as h}from"./utils-DoH-JBCW.js";import{A as u}from"./api-CAVFttsR.js";const o=new u;function p(t){return`
   <article class="card">
     <img class="thumb" src="${t.strArtistThumb||t.strArtistFanart||""}" alt="${t.strArtist}" onerror="this.style.display='none'"/>
     <div class="pad">

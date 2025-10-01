@@ -1,6 +1,8 @@
 
-const TADB = 'https://theaudiodb.com/api/v1/json/2'; // sin barra final
-const LYRICS = 'https://api.lyrics.ovh/v1';
+
+const TADB = '/api/tadb/api/v1/json/2';
+const LYRICS = '/api/lyrics/v1';
+
 
 async function toJson(res) {
   let data = null;
