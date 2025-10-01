@@ -6,11 +6,13 @@ export default defineConfig({
   root: '.',
   server: {
     proxy: {
+      // Proxy para TheAudioDB
       '/api/tadb': {
         target: 'https://theaudiodb.com',
         changeOrigin: true,
         rewrite: p => p.replace(/^\/api\/tadb/, ''),
       },
+      // Proxy para Lyrics.ovh
       '/api/lyrics': {
         target: 'https://api.lyrics.ovh',
         changeOrigin: true,
@@ -22,12 +24,10 @@ export default defineConfig({
     outDir: 'dist',
     rollupOptions: {
       input: {
-        main:     resolve(__dirname, 'index.html'),
-        results:  resolve(__dirname, 'results.html'),
-        artist:   resolve(__dirname, 'artist.html'),
-        lyrics:   resolve(__dirname, 'lyrics.html'),
-        // añade otras páginas si las tienes:
-        // favorites: resolve(__dirname, 'favorites.html'),
+        main:    resolve(__dirname, 'index.html'),
+        results: resolve(__dirname, 'results.html'),
+        artist:  resolve(__dirname, 'artist.html'),
+        lyrics:  resolve(__dirname, 'lyrics.html'),
       },
     },
   },

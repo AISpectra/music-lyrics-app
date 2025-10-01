@@ -1,25 +1,25 @@
-import { loadHeaderFooter, getParam, qs } from './utils.mjs';
+import { loadHeaderFooter, getParam, qs, alertMessage } from './utils.mjs';
 import Api from './api.mjs';
 
 const api = new Api();
 
-function headerTemplate(a){
+function headerTemplate(a) {
   const thumb = a.strArtistThumb || a.strArtistFanart || '';
   return `
-    <img src="${thumb}" alt="${a.strArtist}" onerror="this.style.display='none'"/>
+    ${thumb ? `<img src="${thumb}" alt="${a.strArtist}" onerror="this.style.display='none'"/>` : ''}
     <div class="meta">
       <h1 style="margin:0 0 6px">${a.strArtist}</h1>
-      <p>${a.strGenre || ''} ${a.intFormedYear? '· since '+a.intFormedYear:''}</p>
+      <p>${a.strGenre || ''} ${a.intFormedYear ? '· since ' + a.intFormedYear : ''}</p>
       <p class="muted small">${a.strCountry || ''}</p>
     </div>
   `;
 }
 
-function trackItem(t){
+function trackItem(t) {
   const img = t.strTrackThumb || t.strAlbumThumb || '';
   return `
     <div class="item">
-      <img src="${img}" alt="${t.strTrack}" onerror="this.style.display='none'"/>
+      ${img ? `<img src="${img}" alt="${t.strTrack}" onerror="this.style.display='none'"/>` : ''}
       <div style="flex:1">
         <div><strong>${t.strTrack}</strong></div>
         <div class="muted small">${t.strAlbum || ''}</div>
@@ -29,11 +29,11 @@ function trackItem(t){
   `;
 }
 
-function albumCard(alb){
+function albumCard(alb) {
   const img = alb.strAlbumThumb || '';
   return `
     <article class="card">
-      <img class="thumb" src="${img}" alt="${alb.strAlbum}" onerror="this.style.display='none'"/>
+      ${img ? `<img class="thumb" src="${img}" alt="${alb.strAlbum}" onerror="this.style.display='none'"/>` : ''}
       <div class="pad">
         <h3>${alb.strAlbum}</h3>
         <p class="muted small">${alb.intYearReleased || ''}</p>
@@ -42,36 +42,62 @@ function albumCard(alb){
   `;
 }
 
-(async function(){
+(async function () {
   await loadHeaderFooter();
 
-  const id = getParam('id');
-  if(!id) { location.href = '/'; return; }
+  const id   = getParam('id');     // idArtist (lo ideal)
+  const name = getParam('name');   // fallback por nombre
 
-  const header = qs('#artist-header');
+  const headerEl = qs('#artist-header');
   const tracksEl = qs('#artist-tracks');
   const albumsEl = qs('#artist-albums');
   const tracksEmpty = qs('#tracks-empty');
   const albumsEmpty = qs('#albums-empty');
 
-  try{
-    const artist = await api.artistById(id);
-    if(!artist){ header.innerHTML = '<p class="muted">Artist not found.</p>'; return; }
-    header.innerHTML = headerTemplate(artist);
+  try {
+    let artist = null;
+
+    // 1) Intentar por id
+    if (id) {
+      try {
+        artist = await api.artistById(id);
+      } catch (e) {
+        // si lookup devuelve 404/servicio, seguimos al fallback por nombre
+      }
+    }
+
+    // 2) Fallback por nombre (si vino en la URL)
+    if (!artist && name) {
+      const list = await api.searchArtists(name);
+      artist = list?.[0] || null;
+    }
+
+    if (!artist) {
+      headerEl.innerHTML = '<p class="muted">Artist not found.</p>';
+      return;
+    }
+
+    headerEl.innerHTML = headerTemplate(artist);
 
     const [tracks, albums] = await Promise.all([
       api.topTracksByArtist(artist.strArtist),
       api.albumsByArtist(artist.strArtist)
     ]);
 
-    if(tracks?.length) tracksEl.innerHTML = tracks.map(trackItem).join('');
-    else tracksEmpty.hidden = false;
+    if (tracks?.length) {
+      tracksEl.innerHTML = tracks.map(trackItem).join('');
+    } else {
+      tracksEmpty.hidden = false;
+    }
 
-    if(albums?.length) albumsEl.innerHTML = albums.map(albumCard).join('');
-    else albumsEmpty.hidden = false;
-
-  }catch(e){
-    console.error(e);
-    header.innerHTML = '<p class="muted">Failed to load artist.</p>';
+    if (albums?.length) {
+      albumsEl.innerHTML = albums.map(albumCard).join('');
+    } else {
+      albumsEmpty.hidden = false;
+    }
+  } catch (err) {
+    console.error(err);
+    alertMessage('Failed to load artist.', { type: 'error' });
+    headerEl.innerHTML = '<p class="muted">Failed to load artist.</p>';
   }
 })();

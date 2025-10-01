@@ -1,12 +1,11 @@
-# netlify.toml
 [[redirects]]
   from = "/api/tadb/*"
-  to   = "https://theaudiodb.com/:splat"
+  to = "https://theaudiodb.com/:splat"
   status = 200
   force = true
 
 [[redirects]]
   from = "/api/lyrics/*"
-  to   = "https://api.lyrics.ovh/:splat"
+  to = "https://api.lyrics.ovh/:splat"
   status = 200
   force = true
