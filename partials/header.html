@@ -1,10 +1,21 @@
-<div class="nav">
-  <a class="brand" href="/">🎵 Music<span class="accent">&</span>Lyrics</a>
-  <form id="header-search" class="search small">
-    <input name="q" placeholder="Search…" />
+<div class="nav" role="navigation" aria-label="Main">
+  <a class="brand" href="/index.html">
+    🎵 Music<span class="accent">&</span>Lyrics
+  </a>
+
+  <form id="header-search" class="search small" role="search" aria-label="Site search">
+    <input
+      type="search"
+      name="q"
+      placeholder="Search…"
+      required
+      autocomplete="off"
+      aria-label="Search songs or artists"
+    />
     <button type="submit">Go</button>
   </form>
-  <nav class="links">
+
+  <nav class="links" aria-label="External links">
     <a href="https://www.theaudiodb.com/api_guide.php" target="_blank" rel="noopener">APIs</a>
   </nav>
 </div>
