@@ -1,6 +1,6 @@
-// js/suggest.mjs
+// js/suggestions.js
 import Api from './api.mjs';
-import { debounce, fuzzyScore, uniqueBy, qs } from './utils.mjs';
+import { debounce, fuzzyScore, uniqueBy } from './utils.mjs';
 
 const api = new Api();
 
@@ -121,16 +121,17 @@ export function attachSuggest(input) {
         href: `/lyrics.html?artist=${encodeURIComponent(t.strArtist)}&track=${encodeURIComponent(t.strTrack)}`,
         _score: Math.max(
           fuzzyScore(q, t.strTrack || ''),
-          fuzzyScore(q, `${t.strArtist} ${t.strTrack}` || '')
+          fuzzyScore(q, `${t.strArtist || ''} ${t.strTrack || ''}`.trim())
         )
       }));
 
       let all = [...artistItems, ...trackItems];
-      all = uniqueBy(all, x => `${x.type}:${x.label}:${x.sub}`);
+      all = uniqueBy(all, x => `${x.type}:${(x.label || '').toLowerCase()}:${(x.sub || '').toLowerCase()}`);
       all.sort((a, b) => b._score - a._score);
 
       render(all);
-    } catch {
+    } catch (error) {
+      console.error('Suggestions request failed', error);
       if (myReq === reqId) close();
     }
   }, 250);

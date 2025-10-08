@@ -85,7 +85,7 @@ export function normalize(str = "") {
 export function editDistance(a = "", b = "") {
   a = normalize(a);
   b = normalize(b);
-  const dp = Array.from({ length: a.length + 1 }, (_, i) =>
+  const dp = Array.from({ length: a.length + 1 }, () =>
     Array(b.length + 1).fill(0)
   );
   for (let i = 0; i <= a.length; i++) dp[i][0] = i;
