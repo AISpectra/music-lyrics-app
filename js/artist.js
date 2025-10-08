@@ -1,4 +1,6 @@
+// js/artist.js
 import { loadHeaderFooter, getParam, qs, alertMessage } from './utils.mjs';
+import { attachSuggest } from './suggest.mjs';
 import Api from './api.mjs';
 
 const api = new Api();
@@ -42,10 +44,25 @@ function albumCard(alb) {
   `;
 }
 
+// dedupe helpers
+function uniqueBy(arr, keyFn) {
+  const seen = new Set();
+  return (arr || []).filter(x => {
+    const k = keyFn(x);
+    if (seen.has(k)) return false;
+    seen.add(k);
+    return true;
+  });
+}
+
 (async function () {
   await loadHeaderFooter();
 
-  const id   = getParam('id');     // idArtist (lo ideal)
+  // activar sugerencias en header
+  const headerInput = qs('#header-search input');
+  if (headerInput) attachSuggest(headerInput);
+
+  const id   = getParam('id');     // idArtist (preferido)
   const name = getParam('name');   // fallback por nombre
 
   const headerEl = qs('#artist-header');
@@ -54,19 +71,26 @@ function albumCard(alb) {
   const tracksEmpty = qs('#tracks-empty');
   const albumsEmpty = qs('#albums-empty');
 
+  // estado de carga
+  headerEl.innerHTML = `<p class="muted">Loading artist…</p>`;
+  tracksEl.innerHTML = `<p class="muted">Loading top tracks…</p>`;
+  albumsEl.innerHTML = `<p class="muted">Loading albums…</p>`;
+  tracksEmpty.hidden = true;
+  albumsEmpty.hidden = true;
+
   try {
     let artist = null;
 
-    // 1) Intentar por id
+    // 1) Buscar por id
     if (id) {
       try {
         artist = await api.artistById(id);
-      } catch (e) {
-        // si lookup devuelve 404/servicio, seguimos al fallback por nombre
+      } catch (_) {
+        // seguir al fallback si falla
       }
     }
 
-    // 2) Fallback por nombre (si vino en la URL)
+    // 2) Fallback: por nombre (si vino)
     if (!artist && name) {
       const list = await api.searchArtists(name);
       artist = list?.[0] || null;
@@ -74,30 +98,47 @@ function albumCard(alb) {
 
     if (!artist) {
       headerEl.innerHTML = '<p class="muted">Artist not found.</p>';
+      tracksEl.innerHTML = '';
+      albumsEl.innerHTML = '';
+      tracksEmpty.hidden = false;
+      albumsEmpty.hidden = false;
       return;
     }
 
     headerEl.innerHTML = headerTemplate(artist);
 
-    const [tracks, albums] = await Promise.all([
+    const [tracksRaw, albumsRaw] = await Promise.all([
       api.topTracksByArtist(artist.strArtist),
       api.albumsByArtist(artist.strArtist)
     ]);
 
+    // quitar duplicados
+    const tracks = uniqueBy(tracksRaw, t => t.idTrack || `${t.strArtist}:${t.strTrack}`);
+    const albums = uniqueBy(albumsRaw, a => a.idAlbum || a.strAlbum);
+
     if (tracks?.length) {
       tracksEl.innerHTML = tracks.map(trackItem).join('');
+      tracksEmpty.hidden = true;
     } else {
+      tracksEl.innerHTML = '';
       tracksEmpty.hidden = false;
     }
 
     if (albums?.length) {
       albumsEl.innerHTML = albums.map(albumCard).join('');
+      albumsEmpty.hidden = true;
     } else {
+      albumsEl.innerHTML = '';
       albumsEmpty.hidden = false;
     }
   } catch (err) {
     console.error(err);
     alertMessage('Failed to load artist.', { type: 'error' });
     headerEl.innerHTML = '<p class="muted">Failed to load artist.</p>';
+    tracksEl.innerHTML = '';
+    albumsEl.innerHTML = '';
+    tracksEmpty.hidden = false;
+    albumsEmpty.hidden = false;
   }
 })();
+

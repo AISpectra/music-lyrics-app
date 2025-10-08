@@ -13,25 +13,34 @@
     <section class="hero">
       <h1>Music & Lyrics Finder</h1>
       <p>Search songs, read lyrics, and explore artists.</p>
-      <form id="search-form" class="search">
-        <input name="q" id="q" placeholder="Search songs or artists..." required />
+      <form id="search-form" class="search" role="search" aria-label="Main search">
+        <input
+          name="q"
+          id="q"
+          type="search"
+          placeholder="Search songs or artists..."
+          required
+          autocomplete="off"
+          aria-label="Search songs or artists"
+        />
         <button type="submit">Search</button>
       </form>
     </section>
 
-    <section>
-      <h2>Try these</h2>
-      <div class="chips">
-        <button class="chip" data-query="coldplay">Coldplay</button>
-        <button class="chip" data-query="adele">Adele</button>
-        <button class="chip" data-query="believer">Believer</button>
-        <button class="chip" data-query="bad guy">Bad Guy</button>
+    <section aria-labelledby="try-these">
+      <h2 id="try-these">Try these</h2>
+      <div class="chips" role="list">
+        <button class="chip" data-query="coldplay" role="listitem">Coldplay</button>
+        <button class="chip" data-query="adele" role="listitem">Adele</button>
+        <button class="chip" data-query="believer" role="listitem">Believer</button>
+        <button class="chip" data-query="Justin Timberlake" role="listitem">Justin Timberlake</button>
       </div>
     </section>
   </main>
 
   <footer id="site-footer"></footer>
 
+ 
   <script type="module" src="/js/main.js"></script>
 </body>
 </html>

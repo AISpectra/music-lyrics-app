@@ -1,4 +1,4 @@
-// DOM + storage
+
 export const qs = (sel, parent=document)=>parent.querySelector(sel);
 export const qsa = (sel, parent=document)=>[...parent.querySelectorAll(sel)];
 export const getLS = (k)=>JSON.parse(localStorage.getItem(k) || 'null');
@@ -51,7 +51,7 @@ function wireHeaderSearch(root){
   });
 }
 
-// helpers
+
 export const fmt = {
   duration(ms){
     if(!ms) return '';
@@ -61,3 +61,67 @@ export const fmt = {
     return `${m}:${r}`;
   }
 };
+
+
+
+
+export function debounce(fn, delay = 250) {
+  let t;
+  return (...args) => {
+    clearTimeout(t);
+    t = setTimeout(() => fn(...args), delay);
+  };
+}
+
+
+export function normalize(str = "") {
+  return String(str)
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/\p{Diacritic}/gu, "");
+}
+
+
+export function editDistance(a = "", b = "") {
+  a = normalize(a);
+  b = normalize(b);
+  const dp = Array.from({ length: a.length + 1 }, (_, i) =>
+    Array(b.length + 1).fill(0)
+  );
+  for (let i = 0; i <= a.length; i++) dp[i][0] = i;
+  for (let j = 0; j <= b.length; j++) dp[0][j] = j;
+  for (let i = 1; i <= a.length; i++) {
+    for (let j = 1; j <= b.length; j++) {
+      const cost = a[i - 1] === b[j - 1] ? 0 : 1;
+      dp[i][j] = Math.min(
+        dp[i - 1][j] + 1,
+        dp[i][j - 1] + 1,
+        dp[i - 1][j - 1] + cost
+      );
+    }
+  }
+  return dp[a.length][b.length];
+}
+
+
+export function fuzzyScore(query, text) {
+  const q = normalize(query);
+  const t = normalize(text);
+  if (!q || !t) return 0;
+  if (t.startsWith(q)) return 1.0;     
+  if (t.includes(q)) return 0.8;       
+  const dist = editDistance(q, t);     
+  const maxLen = Math.max(q.length, t.length);
+  return Math.max(0, 1 - dist / (maxLen || 1)) * 0.7;
+}
+
+
+export function uniqueBy(arr, keyFn) {
+  const seen = new Set();
+  return arr.filter((x) => {
+    const k = keyFn(x);
+    if (seen.has(k)) return false;
+    seen.add(k);
+    return true;
+  });
+}

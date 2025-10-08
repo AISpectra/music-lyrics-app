@@ -1,22 +1,33 @@
+// js/main.js
 import { loadHeaderFooter, qs } from './utils.mjs';
+import { attachSuggest } from './suggest.mjs'; // 👈 nuevo
 
-(async function(){
+(async function () {
+  // 1️⃣ Carga header y footer
   await loadHeaderFooter();
 
-  // main search form
+  // 2️⃣ Formulario principal
   const form = qs('#search-form');
-  form?.addEventListener('submit', e=>{
+  const input = qs('#q', form);
+  if (input) attachSuggest(input); // 👈 añade autocompletado
+
+  form?.addEventListener('submit', (e) => {
     e.preventDefault();
     const term = new FormData(form).get('q')?.trim();
-    if(!term) return;
+    if (!term) return;
     location.href = `/results.html?q=${encodeURIComponent(term)}`;
   });
 
-  // chips
-  document.querySelectorAll('.chip').forEach(btn=>{
-    btn.addEventListener('click', ()=>{
+  // 3️⃣ Chips
+  document.querySelectorAll('.chip').forEach((btn) => {
+    btn.addEventListener('click', () => {
       const q = btn.dataset.query;
       location.href = `/results.html?q=${encodeURIComponent(q)}`;
     });
   });
+
+  // 4️⃣ También agrega sugerencias al buscador del header (si existe)
+  const headerInput = qs('#header-search input');
+  if (headerInput) attachSuggest(headerInput);
 })();
+
