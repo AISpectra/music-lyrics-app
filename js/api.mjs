@@ -1,4 +1,4 @@
-// js/api.mjs 
+// js/api.mjs
 
 // En local usamos el proxy de Vite.
 // En producción puedes dejarlo igual si tu host respeta CORS, o
@@ -8,7 +8,11 @@ const LYRICS_BASE = '/api/lyrics/v1';
 
 async function toJson(res) {
   let data = null;
-  try { data = await res.json(); } catch (_) {}
+  try {
+    data = await res.json();
+  } catch (error) {
+    console.warn('Failed to parse JSON response', error);
+  }
   if (!res.ok) {
     throw { name: 'servicesError', message: data || { status: res.status } };
   }
@@ -67,7 +71,11 @@ export default class Api {
     const url = `${LYRICS_BASE}/${encodeURIComponent(artist)}/${encodeURIComponent(title)}`;
     const res = await fetch(url);
     let data = null;
-    try { data = await res.json(); } catch (_) {}
+    try {
+      data = await res.json();
+    } catch (error) {
+      console.warn('Failed to parse lyrics response', error);
+    }
     if (!res.ok) {
       throw { name: 'servicesError', message: data || { status: res.status } };
     }

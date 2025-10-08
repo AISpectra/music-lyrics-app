@@ -85,7 +85,8 @@ function uniqueBy(arr, keyFn) {
     if (id) {
       try {
         artist = await api.artistById(id);
-      } catch (_) {
+      } catch (error) {
+        console.warn('Artist lookup by id failed, falling back to name search', error);
         // seguir al fallback si falla
       }
     }

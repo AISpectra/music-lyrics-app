@@ -1,6 +1,6 @@
 // js/suggest.mjs
 import Api from './api.mjs';
-import { debounce, fuzzyScore, uniqueBy, qs } from './utils.mjs';
+import { debounce, fuzzyScore, uniqueBy } from './utils.mjs';
 
 const api = new Api();
 
@@ -175,7 +175,8 @@ export function attachSuggest(input) {
       all.sort((a, b) => b._score - a._score);
 
       render(all);
-    } catch {
+    } catch (error) {
+      console.error('Suggestions request failed', error);
       if (myReq === reqId) {
         list.innerHTML = `<li class="suggest-item empty" aria-disabled="true">Suggestions unavailable</li>`;
         wrap.style.display = 'block';
