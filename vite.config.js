@@ -32,6 +32,7 @@ export default defineConfig({
         results: resolve(__dirname, 'results.html'),
         artist:  resolve(__dirname, 'artist.html'),
         lyrics:  resolve(__dirname, 'lyrics.html'),
+        favorites: resolve(__dirname, 'favorites.html'),
       },
     },
   },
