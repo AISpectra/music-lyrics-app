@@ -290,3 +290,22 @@ a:hover{opacity:.92}
   opacity: .7;
   cursor: default;
 }
+
+
+.btn.secondary {
+  background: #0f1220;
+  color: var(--text);
+  box-shadow: none;
+}
+
+.btn.secondary:hover {
+  color: var(--accent);
+  background: linear-gradient(90deg, rgba(108,255,255,.08), rgba(181,140,255,.06));
+}
+
+.btn.secondary.is-favorite {
+  background: linear-gradient(90deg, rgba(108,255,255,.16), rgba(181,140,255,.14));
+  border-color: var(--accent);
+  color: var(--accent);
+  box-shadow: 0 0 12px rgba(108,255,255,.25);
+}

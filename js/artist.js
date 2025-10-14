@@ -2,6 +2,11 @@
 import { loadHeaderFooter, getParam, qs, alertMessage } from './utils.mjs';
 import { attachSuggest } from './suggest.mjs';
 import Api from './api.mjs';
+import {
+  toggleFavorite,
+  isFavorite,
+  asFavoritePayload,
+} from './favorites.mjs';
 
 const api = new Api();
 
@@ -13,6 +18,11 @@ function headerTemplate(a) {
       <h1 style="margin:0 0 6px">${a.strArtist}</h1>
       <p>${a.strGenre || ''} ${a.intFormedYear ? '· since ' + a.intFormedYear : ''}</p>
       <p class="muted small">${a.strCountry || ''}</p>
+      <div class="row" style="margin-top:12px;gap:12px;">
+        <button class="btn secondary" type="button" data-favorite-btn aria-pressed="false">
+          Save to favorites
+        </button>
+      </div>
     </div>
   `;
 }
@@ -107,6 +117,37 @@ function uniqueBy(arr, keyFn) {
     }
 
     headerEl.innerHTML = headerTemplate(artist);
+
+        const favBtn = qs('[data-favorite-btn]', headerEl);
+    const payload = asFavoritePayload(artist);
+
+    if (!payload.id && favBtn) {
+      favBtn.disabled = true;
+      favBtn.textContent = 'Unavailable';
+      favBtn.setAttribute('aria-disabled', 'true');
+    }
+
+    const refreshFavBtn = (state) => {
+      if (!favBtn) return;
+      favBtn.textContent = state ? 'Remove from favorites' : 'Save to favorites';
+      favBtn.setAttribute('aria-pressed', state ? 'true' : 'false');
+      favBtn.classList.toggle('is-favorite', state);
+    };
+
+    if (payload.id) {
+      refreshFavBtn(isFavorite(payload.id));
+
+      favBtn?.addEventListener('click', () => {
+        const { favorite } = toggleFavorite(payload);
+        refreshFavBtn(favorite);
+        alertMessage(
+          favorite
+            ? `${artist.strArtist} added to favorites!`
+            : `${artist.strArtist} removed from favorites.`,
+          { type: 'success', scroll: false }
+        );
+      });
+    }
 
     const [tracksRaw, albumsRaw] = await Promise.all([
       api.topTracksByArtist(artist.strArtist),
