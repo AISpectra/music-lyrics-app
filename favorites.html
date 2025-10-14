@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Favorites · Music & Lyrics Finder</title>
+  <link rel="stylesheet" href="/css/style.css" />
+</head>
+<body>
+  <header id="site-header"></header>
+
+  <main class="container">
+    <header style="margin-bottom:18px;max-width:720px;">
+      <h1 style="margin-bottom:6px;">Saved artists</h1>
+      <p class="muted">Keep track of your favorite artists for quick access to their top tracks and albums.</p>
+    </header>
+
+    <section>
+      <div id="favorites-grid" class="grid" aria-live="polite"></div>
+      <p id="favorites-empty" class="muted" role="status" hidden>You haven't saved any artists yet. Explore the app and tap “Save to favorites”.</p>
+    </section>
+  </main>
+
+  <footer id="site-footer"></footer>
+
+  <script type="module" src="/js/favorites.js"></script>
+</body>
+</html>
